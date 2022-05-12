@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as Math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_radial_menu/src/arc_progress_indicator.dart';
 import 'package:flutter_radial_menu/src/radial_menu_button.dart';
@@ -40,16 +39,13 @@ class RadialMenu<T> extends StatefulWidget {
   /// arguments must not be null (they all have defaults, so do not need to be
   /// specified).
   const RadialMenu({
-    Key key,
-    @required this.items,
-    @required this.onSelected,
+    Key? key,
+    required this.items,
+    required this.onSelected,
     this.radius = 100.0,
     this.menuAnimationDuration = const Duration(milliseconds: 1000),
     this.progressAnimationDuration = const Duration(milliseconds: 1000),
-  })  : assert(radius != null),
-        assert(menuAnimationDuration != null),
-        assert(progressAnimationDuration != null),
-        super(key: key);
+  })  : super(key: key);
 
   /// The list of possible items to select among.
   final List<RadialMenuItem<T>> items;
@@ -77,10 +73,10 @@ class RadialMenu<T> extends StatefulWidget {
 }
 
 class RadialMenuState extends State<RadialMenu> with TickerProviderStateMixin {
-  AnimationController _menuAnimationController;
-  AnimationController _progressAnimationController;
+  late AnimationController _menuAnimationController;
+  late AnimationController _progressAnimationController;
   bool _isOpen = false;
-  int _activeItemIndex;
+  int? _activeItemIndex;
 
   // todo: xqwzts: allow users to pass in their own calculator as a param.
   // and change this to the default: radialItemAngleCalculator.
@@ -122,9 +118,7 @@ class RadialMenuState extends State<RadialMenu> with TickerProviderStateMixin {
   Future<Null> _activate(int itemIndex) async {
     setState(() => _activeItemIndex = itemIndex);
     await _progressAnimationController.forward().orCancel;
-    if (widget.onSelected != null) {
-      widget.onSelected(widget.items[itemIndex].value);
-    }
+    widget.onSelected(widget.items[itemIndex].value);
   }
 
   /// Resets the menu to its initial (closed) state.
@@ -189,14 +183,14 @@ class RadialMenuState extends State<RadialMenu> with TickerProviderStateMixin {
     }
 
     if (_activeItemIndex != null) {
-      children.add(_buildActiveAction(_activeItemIndex));
+      children.add(_buildActiveAction(_activeItemIndex!));
     }
 
     children.add(_buildCenterButton());
 
     return new AnimatedBuilder(
       animation: _menuAnimationController,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return new CustomMultiChildLayout(
           delegate: new _RadialMenuLayout(
             itemCount: widget.items.length,
@@ -225,14 +219,14 @@ class _RadialMenuLayout extends MultiChildLayoutDelegate {
   final Animation<double> _progress;
 
   _RadialMenuLayout({
-    @required this.itemCount,
-    @required this.radius,
-    @required this.calculateItemAngle,
-    this.controller,
+    required this.itemCount,
+    required this.radius,
+    required this.calculateItemAngle,
+    required this.controller,
   }) : _progress = new Tween<double>(begin: 0.0, end: radius).animate(
             new CurvedAnimation(curve: Curves.elasticOut, parent: controller));
 
-  Offset center;
+  Offset? center;
 
   @override
   void performLayout(Size size) {
@@ -246,8 +240,8 @@ class _RadialMenuLayout extends MultiChildLayoutDelegate {
       positionChild(
         menuButton,
         new Offset(
-          center.dx - menuButtonSize.width / 2,
-          center.dy - menuButtonSize.height / 2,
+          center!.dx - menuButtonSize.width / 2,
+          center!.dy - menuButtonSize.height / 2,
         ),
       );
     }
@@ -267,8 +261,8 @@ class _RadialMenuLayout extends MultiChildLayoutDelegate {
         positionChild(
           actionArcId,
           new Offset(
-            center.dx - arcSize.width / 2,
-            center.dy - arcSize.height / 2,
+            center!.dx - arcSize.width / 2,
+            center!.dy - arcSize.height / 2,
           ),
         );
       }
@@ -282,9 +276,9 @@ class _RadialMenuLayout extends MultiChildLayoutDelegate {
         positionChild(
           actionButtonId,
           new Offset(
-            (center.dx - buttonSize.width / 2) +
+            (center!.dx - buttonSize.width / 2) +
                 (_progress.value) * Math.cos(itemAngle),
-            (center.dy - buttonSize.height / 2) +
+            (center!.dy - buttonSize.height / 2) +
                 (_progress.value) * Math.sin(itemAngle),
           ),
         );

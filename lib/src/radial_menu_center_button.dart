@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_radial_menu/src/radial_menu_button.dart';
 
@@ -52,10 +51,10 @@ class RadialMenuCenterButton extends StatelessWidget {
   final Animation<double> _scale;
 
   RadialMenuCenterButton({
-    @required this.openCloseAnimationController,
-    @required this.activateAnimationController,
-    @required this.onPressed,
-    @required this.isOpen,
+    required this.openCloseAnimationController,
+    required this.activateAnimationController,
+    required this.onPressed,
+    required this.isOpen,
     this.iconColor = Colors.black,
     this.closedColor = Colors.white,
     this.openedColor = Colors.grey,

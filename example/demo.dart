@@ -82,7 +82,7 @@ void main() {
         ),
         floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.restore),
-          onPressed: () => _menuKey.currentState.reset(),
+          onPressed: () => _menuKey.currentState?.reset(),
         ),
       ),
     ),
